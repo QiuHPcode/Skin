@@ -12,7 +12,7 @@
 MySQL数据库skin.sql
 ### 功能实现
 #### 实现前后端分离，token验证密钥自动登录，皮损根据后端YOLOv5模型预测的坐标用Canvas自动标注框取或手动框取，并最终根据ResNet模型出现结果，并实现单账号多用户及各记录的增删改操作。
-#### 界面效果
+### 界面效果
 ![主页](https://github.com/QiuHPcode/picture/blob/master/%E4%B8%BB%E9%A1%B5.png)
 ![登录](https://github.com/QiuHPcode/picture/blob/master/%E7%99%BB%E5%BD%95.png)
 ![注册](https://github.com/QiuHPcode/picture/blob/master/%E6%B3%A8%E5%86%8C.png)
