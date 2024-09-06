@@ -5,6 +5,7 @@
 ## 运行
 ### 后端(flaskservice)
 配置requeriments.txt的环境 及自身电脑适配的不低于YOLOv5和ResNet34需求的pytorch版本
+主文件是flaskclient.py文件
 ### 前端(App01)
 项目于HBuilderX导入
 可直接运行 或导出为apk安卓安装包等各种
