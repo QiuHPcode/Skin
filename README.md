@@ -4,13 +4,15 @@
 * python版本 3.9
 ## 运行
 ### 后端(flaskservice)
-配置requeriments.txt的环境 及自身电脑适配的不低于YOLOv5和ResNet34需求的pytorch版本
-主文件是flaskclient.py文件
+配置requeriments.txt的环境 及自身电脑适配的不低于YOLOv5和ResNet34需求的pytorch版本  
+主文件是flaskclient.py文件  
+一个皮肤检测YOLOv5定位模型，一个皮损(皮肤损坏位置)YOLOv5定位模型,一个病类分类RestNet34诊断模型,都是自己找寻数据，做数据标注处理，然后调参训练部署，因为数据不多，所以有的检测率不高请谅解，其实可以去找找类似的API接口请求。
 ### 前端(App01)
 项目于HBuilderX导入
 可直接运行 或导出为apk安卓安装包等各种
 ### 数据库(skin.sql)
-MySQL数据库skin.sql
+MySQL数据库skin.sql  
+这里存在各种登录信息，还有记录，和皮肤病中西的数据库，这也是自己搜自己处理的，所以请各位谅解。
 ### 功能实现
 #### 项目有一些语言不规范请谅解,因为前后端开发时间太紧，有一些地方写的死代码。
 #### 实现前后端分离，token验证密钥自动登录，皮肤定位判断及皮肤损坏位置定位判断根据后端YOLOv5模型预测的坐标用Canvas自动标注框取或手动框取，并最终根据ResNet模型出现结果，并实现单账号多用户及各记录的增删改操作。
