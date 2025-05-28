@@ -448,7 +448,7 @@
 			</view>
 		</uni-popup>
 		
-		<view style="height: 16vh; border-top: 2rpx solid #9f9f9f; background-color: antiquewhite;">
+		<view style="height: 16vh; border-top: 2rpx solid #9f9f9f;">
 			<view style="height: 30%; background-color: #fff; display: flex; align-items: center; justify-content: flex-start;">
 				<view style="display: flex; justify-content: flex-start; align-items: center; padding-left: 5%; padding-right: 5%;">
 					<view style="height: 100%; display: flex; justify-content: center; align-items: center; padding: 0 2%; font-size: 30rpx;">
@@ -462,6 +462,11 @@
 					<text :style="{color: isChecked ? '#6f6f6f':'#b2b2b2' }">选择全身</text>
 				</view>
 			</view>
+			<uni-section  title="模型选择:" type="line">
+				<template v-slot:right>
+					<uni-data-select placement="top" :clear="false"  :localdata="models" placeholder="请选择检测模型" v-model="form.model" style=" padding-left: 20rpx;padding-right: 20rpx;"></uni-data-select>
+				</template>
+			</uni-section>
 			<view style="height: 70%; background-color: #fff; display: flex; align-items: center; justify-content: center;">
 				<button :style="{width: '80%', color: (ischose || isChecked) ? '#fff' :'#b2b2b2' , 'background-color':  (ischose || isChecked) ? '#8366c8':'#dddddd','border-radius': '30rpx', 'font-size': '28rpx', border: (ischose || isChecked) ? '1rpx solid #8366c8' : '1rpx solid #dddddd' }"  hover-class="finalbt"  @click="final">查看结果</button>
 			</view>
@@ -485,6 +490,7 @@
 	export default {
 		data() {
 			return {
+				models:[],
 				ischose: false,
 				opposite: true,
 				form:{
@@ -497,7 +503,8 @@
 					sex: '男',
 					age: '0',
 					imageUrl: '',
-					position: []
+					position: [],
+					model: 1
 				},
 				// 女 40 男 41
 				clicknum: 0,
@@ -521,7 +528,7 @@
 			}
 		},
 		onLoad :function(option) {
-			
+			this.getModels()
 			const form = JSON.parse(option.form);
 			this.form.info_id = form.info_id;
 			this.form.username = form.username;
@@ -795,6 +802,30 @@
 				this.tabbarheight = uni.getSystemInfoSync().statusBarHeight;
 				// console.log('efeddwf',this.height);
 				this.canvastop = this.height;
+			},
+			getModels() {
+				var that = this;
+				uni.request({
+				   url:this.$BASE_URL+'/model',
+				   method:'GET',
+				   success: (res) => { 
+				        const data = res.data;
+				        if (data.code = '200'){
+				            that.models = data.data; 
+				        }else{
+				            uni.showToast({
+				                title: data.msg,
+				                icon:'error'
+				            })
+				        }
+				    },
+				    fail: (error) => {   
+				        uni.showToast({
+				            title: '服务器或网络错误',
+				            icon:'none'
+				        })        
+				    }
+				  })
 			}
 			
 			
@@ -804,6 +835,13 @@
 </script>
 
 <style>
+	
+	>>>.uni-section .uni-section-header__content {
+		flex: unset !important;
+	}
+	>>>.uni-section .uni-section-header__slot-right{
+		flex: 1 !important;
+	}
 	>>>.uni-switch-input::before{
 		background-color: #8366c8 ;
 	}

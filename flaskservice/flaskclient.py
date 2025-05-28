@@ -17,14 +17,19 @@ from sqlalchemy import text
 from flask_jwt_extended import create_access_token, JWTManager, get_jwt_identity, jwt_required, create_refresh_token
 from werkzeug.utils import secure_filename
 
-from DbClass import db, User_account, User_info, Sickness, Result, Count
+from DbClass import db, User_account, User_info, Sickness, Result, Count, Model
 from sqlalchemy.exc import IntegrityError
 
-from inference import load_model, all_work
+from inference import load_model34, load_model50, load_modelEv2, all_work, predict, Ev2Predict
+from modelSelect import model_select, get_val_pipeline_by_id
 from mydetect import detect
 from utils.general import xywh2xyxy
 from models.common import DetectMultiBackend
 from utils.torch_utils import select_device
+from models.efficientnetv2.efficientnetv2_b0 import model_cfg
+from models.efficientnetv2.efficientnetv2_b1 import model_cfg1
+from models.efficientnetv2.efficientnetv2_b2 import model_cfg2
+from models.efficientnetv2.efficientnetv2_s import model_cfg_s
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -59,9 +64,20 @@ models1 = DetectMultiBackend(weights1, device=device, fp16=half)
 models2 = DetectMultiBackend(weights2, device=device, fp16=half)
 
 # resnet34模型加载
-model_weights_path = r'model-294 of 500-0.4751133918762207-0.6676676676676677.pth'
+model_weights34_path = r'model/allCategory/resNet34.pth'
+model_weights50_path = r'model/allCategory/resNet50.pth'
+model_weightsEv2_b0_path = r'model/allCategory/E_b0.pth'
+model_weightsEv2_b1_path = r'model/allCategory/E_b1.pth'
+model_weightsEv2_b2_path = r'model/allCategory/E_b2.pth'
+model_weightsEv2_s_path = r'model/allCategory/E_s.pth'
 device1 = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model = load_model(model_weights_path,device1)
+model34 = load_model34(model_weights34_path,device1)
+model50 = load_model50(model_weights50_path,device1)
+model_Ev2_b0 = load_modelEv2(model_cfg, model_weightsEv2_b0_path, device1)
+model_Ev2_b1 = load_modelEv2(model_cfg1, model_weightsEv2_b1_path, device1)
+model_Ev2_b2 = load_modelEv2(model_cfg2, model_weightsEv2_b2_path, device1)
+model_Ev2_s = load_modelEv2(model_cfg_s, model_weightsEv2_s_path, device1)
+allModels = [model34, model50, model_Ev2_b0, model_Ev2_b1, model_Ev2_b2, model_Ev2_s]
 
 # with app.app_context():
 #     users = User_account.query.all()
@@ -564,6 +580,7 @@ def skinrecognition():
         return jsonify({'code': '500', 'msg': '服务器错误'}), 500
 
 
+# 最终检测结果
 @app.route('/skindataest', methods=['POST'])
 @jwt_required()
 def skindataest():
@@ -578,6 +595,11 @@ def skindataest():
         y = data.get('y')
         w = data.get('w')
         h = data.get('h')
+        model_id = data.get('model')
+        print(model_id)
+        use_model = model_select(allModels, model_id)
+        category = Model.query.filter_by(model_id = model_id).first().category
+        print('category',category)
         xywh = [x, y, w, h]
         user_directory = f'lession/{user_id}'
         if os.path.exists(user_directory):
@@ -596,7 +618,14 @@ def skindataest():
                     -1).tolist()
                 image1 = image[xyxy[1]:xyxy[3], xyxy[0]:xyxy[2]]
                 image1 = Image.fromarray(cv2.cvtColor(image1, cv2.COLOR_BGR2RGB))
-                top_out = all_work(image1, sex, age, position, model)
+                if category == 'E':
+                    val_pipeline = get_val_pipeline_by_id(model_id)
+                    output = Ev2Predict(use_model, image1, val_pipeline)
+                else:
+
+                    output = predict(use_model, image1)
+                #
+                top_out = all_work(output, sex, age, position)
                 top_out = format(top_out)
                 # print('好嗲：',top_out)
                 data_dict = eval(top_out)  # 将字符串解析为字典
@@ -705,6 +734,31 @@ def count():
             response = {'code':'200','msg':'获取成功','data':count}
         else:
             response = {'code': '300', 'msg': '没有信息'}
+        return jsonify(response)
+    except AttributeError as ae:
+        print(f"AttributeError occurred: {ae}")
+        return jsonify({'code': '500', 'msg': '服务器错误'}), 500
+    except TypeError as te:
+        print(f"TypeError occurred: {te}")
+        return jsonify({'code': '500', 'msg': '服务器错误'}), 500
+    except Exception as e:
+        print(f"Exception during forget: {e}")
+        return jsonify({'code': '500', 'msg': '服务器错误'}), 500
+
+@app.route('/model', methods=['GET'])
+# 获取模型信息
+def model():
+    try:
+        models = Model.query.all()
+        model_list = [{
+            'value': m.model_id,
+            'text': f"{m.model_name} （推荐）" if m.recommend == 1 else m.model_name,
+            'recommend': m.recommend
+        } for m in models]
+        # 按 recommend 排序，1 在前，0 在后
+        model_list.sort(key=lambda x: x['recommend'], reverse=True)
+        print(model_list)
+        response = {'code':'200','msg':'获取成功','data':model_list}
         return jsonify(response)
     except AttributeError as ae:
         print(f"AttributeError occurred: {ae}")
@@ -834,6 +888,6 @@ def protected():
 
 
 if __name__ == '__main__':
-    app.run(host='172.19.206.68', port=5000)
+    app.run(host='172.19.117.149', port=5000)
 
 # 后端增删在新一个表里 添加不往数据库做触发器 +1 -1

@@ -56,6 +56,14 @@ class Result(db.Model):
     resulturl = db.Column(db.String(255), nullable=True)
 
 
+class Model(db.Model):
+    __tablename__ = "model"
+    model_id = db.Column(db.Integer,primary_key=True,autoincrement=True)
+    model_name = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(20), nullable=False)
+    recommend = db.Column(db.Integer,nullable=False)
+
+
 
 
 

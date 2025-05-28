@@ -1,0 +1,22 @@
+var that = this;
+uni.request({
+   url:this.$BASE_URL+'/model',
+   method:'GET',
+   success: (res) => {
+        const data = res.data;
+        if (data.code = '200'){
+            that.models = data.data;
+        }else{
+            uni.showToast({
+                title: data.msg,
+                icon:'error'
+            })
+        }
+    },
+    fail: (error) => {
+        uni.showToast({
+            title: '服务器或网络错误',
+            icon:'none'
+        })
+    }
+  })

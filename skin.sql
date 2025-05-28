@@ -11,7 +11,7 @@
  Target Server Version : 80033 (8.0.33)
  File Encoding         : 65001
 
- Date: 02/07/2024 15:59:14
+ Date: 28/05/2025 16:16:29
 */
 
 SET NAMES utf8mb4;
@@ -29,7 +29,29 @@ CREATE TABLE `count`  (
 -- ----------------------------
 -- Records of count
 -- ----------------------------
-INSERT INTO `count` VALUES (11);
+INSERT INTO `count` VALUES (81);
+
+-- ----------------------------
+-- Table structure for model
+-- ----------------------------
+DROP TABLE IF EXISTS `model`;
+CREATE TABLE `model`  (
+  `model_id` int NOT NULL AUTO_INCREMENT,
+  `model_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `recommend` int NULL DEFAULT NULL,
+  PRIMARY KEY (`model_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of model
+-- ----------------------------
+INSERT INTO `model` VALUES (1, 'R34模型', 'R', 0);
+INSERT INTO `model` VALUES (2, 'R50模型', 'R', 0);
+INSERT INTO `model` VALUES (3, 'Ev2b0模型', 'E', 0);
+INSERT INTO `model` VALUES (4, 'Ev2b1模型', 'E', 0);
+INSERT INTO `model` VALUES (5, 'Ev2b2模型', 'E', 0);
+INSERT INTO `model` VALUES (6, 'Ev2s模型', 'E', 0);
 
 -- ----------------------------
 -- Table structure for result
@@ -55,16 +77,18 @@ CREATE TABLE `result`  (
   CONSTRAINT `sickness_id1link` FOREIGN KEY (`sickness_id1`) REFERENCES `sickness` (`sickness_id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `sickness_id2link` FOREIGN KEY (`sickness_id2`) REFERENCES `sickness` (`sickness_id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `sickness_id3link` FOREIGN KEY (`sickness_id3`) REFERENCES `sickness` (`sickness_id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 131 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of result
 -- ----------------------------
-INSERT INTO `result` VALUES (54, 16, 24, 90, 54, 78.1273, 14, 77.1536, '2024-04-10', '\\\\2024-04-10_13-23-43.jpg');
 INSERT INTO `result` VALUES (55, 3, 24, 90, 54, 75.3249, 14, 74.4973, '2024-04-12', '\\\\2024-04-12_01-39-39.jpg');
 INSERT INTO `result` VALUES (56, 3, 24, 90, 54, 51.6516, 14, 51.084, '2024-04-12', '\\\\2024-04-12_05-32-53.jpg');
 INSERT INTO `result` VALUES (57, 32, 24, 90, 54, 73.7111, 14, 72.7924, '2024-04-12', '\\\\2024-04-12_05-47-09.jpg');
-INSERT INTO `result` VALUES (58, 16, 22, 90, 48, 87.4865, 5, 71.4695, '2024-04-12', '\\\\2024-04-12_06-01-02.jpg');
+INSERT INTO `result` VALUES (127, 16, 54, 90, 29, 89.7461, 24, 87.7183, '2025-05-23', '\\\\2025-05-23_09-11-39.jpg');
+INSERT INTO `result` VALUES (128, 16, 54, 90, 29, 89.7461, 24, 87.7183, '2025-05-23', '\\\\2025-05-23_10-12-10.jpg');
+INSERT INTO `result` VALUES (129, 16, 24, 90, 29, 71.4768, 56, 68.4321, '2025-05-23', '\\\\2025-05-23_10-12-49.jpg');
+INSERT INTO `result` VALUES (130, 16, 50, 90, 54, 16.4902, 68, 13.1896, '2025-05-23', '\\\\2025-05-23_10-13-01.jpg');
 
 -- ----------------------------
 -- Table structure for sickness
@@ -179,7 +203,7 @@ CREATE TABLE `user_account`  (
 -- ----------------------------
 -- Records of user_account
 -- ----------------------------
-INSERT INTO `user_account` VALUES (1, 'admin666', '123456', '2024-01-21', '17128527385294532284');
+INSERT INTO `user_account` VALUES (1, 'admin666', '123456', '2024-01-21', '17447011638082980060');
 INSERT INTO `user_account` VALUES (2, 'qiu', '123456', '2024-01-23', '17117826415628843122');
 INSERT INTO `user_account` VALUES (3, 'qiu3', '123456', '2024-01-27', '17117826415628843122');
 INSERT INTO `user_account` VALUES (4, 'admin1', '123456', '2024-02-21', '17128527385294532284');
@@ -188,7 +212,7 @@ INSERT INTO `user_account` VALUES (11, 'admin3', '123456', '2024-02-21', '171178
 INSERT INTO `user_account` VALUES (12, 'efghij', '123456', '2024-02-21', '17117826415628843122');
 INSERT INTO `user_account` VALUES (34, 'admin88', '123456', '2024-02-27', '17117826415628843122');
 INSERT INTO `user_account` VALUES (35, 'admin1111', '123456', '2024-03-20', '17118517239706270200');
-INSERT INTO `user_account` VALUES (37, 'admin123', '123456', '2024-03-20', '99719D63A236FD669D5E8419DB22511D');
+INSERT INTO `user_account` VALUES (37, 'admin123', '123456', '2024-03-20', '17447011638082980060');
 INSERT INTO `user_account` VALUES (38, 'admin0', '123456', '2024-04-12', '8F928FE169183633D2E9D8A2DE1CEFC3');
 
 -- ----------------------------

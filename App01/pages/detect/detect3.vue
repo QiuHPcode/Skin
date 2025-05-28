@@ -41,6 +41,12 @@
 								    <view class="half-width0">{{form.sex}}</view>
 						</view>
 					</view>
+					<uni-section  title="模型选择:" type="line">
+						<template v-slot:right>
+							<uni-data-select  :clear="false"  :localdata="models" placeholder="请选择检测模型" v-model="form.model" style=" padding-left: 20rpx;"></uni-data-select>
+						</template>
+					</uni-section>
+					<button @click="changeModel" style="background-color: #9370DB; border-radius: 20px; font-size: 30rpx; word-spacing: 20rpx; color: #fff; width: 75%;">切换模型检测</button>
 				</uni-card>
 			</view>
 		</view>
@@ -48,7 +54,7 @@
 			<view v-for="(item,index) in test" :key="index">
 				<view style="padding-top: 3%; padding-bottom: 3%; background-color: #ECEFF1; display: flex; justify-content: center; justify-content: center;">
 					<uni-card :is-full="true" style="white-space: nowrap; text-overflow: ellipsis;margin-left: 5%; margin-right: 5%; border-radius: 30rpx;">
-						<view style="white-space: nowrap; display: flex; justify-content: center; align-items: center; text-overflow: ellipsis; margin-bottom: 2%; padding-bottom: 2%;  border-bottom: 2rpx solid #b2b2b2;">
+						<view style="white-space: nowrap; display: flex; justify-content: flex-start; align-items: center; text-overflow: ellipsis; margin-bottom: 2%; padding-bottom: 2%;  border-bottom: 2rpx solid #b2b2b2;">
 							<text v-if="item.isChinesemedicine == 0" style="font-size: 16px; color: #b2b2b2; white-space: nowrap; text-overflow: ellipsis;  overflow: hidden;">西医：</text>
 							<text v-if="item.isChinesemedicine == 0" style="font-size: 20px; color: #000; white-space: nowrap; text-overflow: ellipsis;  overflow: hidden;">{{ item.Wsicknessname}}</text>
 							<text v-if="item.isChinesemedicine == 1" style="font-size: 16px; color: #b2b2b2; white-space: nowrap; text-overflow: ellipsis;  overflow: hidden;">西医：</text>
@@ -198,7 +204,8 @@ import { base64ToPath } from '../../js_sdk/mmmm-image-tools';
 					position: [],
 					date: '',
 					results: [],
-					imageUrl:'../../static/user.jpg'
+					imageUrl:'../../static/user.jpg',
+					model: 1,
 				},
 				test: [0,0,0],
 				// Wed, 03 Jan 2024 00:00:00 GMT
@@ -208,10 +215,12 @@ import { base64ToPath } from '../../js_sdk/mmmm-image-tools';
 				text: '1.卧床休息，抬高患肢。2.新霉素溶液、硼酸水或者生理盐水进行清洗或者湿敷。3.莫匹罗星软膏。4.手术治疗。',
 				time1:null,
 				canvasw:0,
-				canvash:0
+				canvash:0,
+				models: []
 			}
 		},
 		onLoad :function(option) {
+			this.getModels()
 			// console.log(JSON.parse(option.form));
 			const form = JSON.parse(option.form);
 			this.form.info_id = form.info_id;
@@ -224,6 +233,8 @@ import { base64ToPath } from '../../js_sdk/mmmm-image-tools';
 			this.form.h = form.h;
 			this.form.imageUrl = form.imageUrl;
 			this.form.position = form.position;
+			this.form.model = form.model;
+			
 			uni.showLoading({
 				mask:true
 			})
@@ -393,6 +404,94 @@ import { base64ToPath } from '../../js_sdk/mmmm-image-tools';
 			
 		},
 		methods: {
+			getModels() {
+				var that = this;
+				uni.request({
+				   url:this.$BASE_URL+'/model',
+				   method:'GET',
+				   success: (res) => { 
+				        const data = res.data;
+				        if (data.code = '200'){
+				            that.models = data.data; 
+				        }else{
+				            uni.showToast({
+				                title: data.msg,
+				                icon:'error'
+				            })
+				        }
+				    },
+				    fail: (error) => {   
+				        uni.showToast({
+				            title: '服务器或网络错误',
+				            icon:'none'
+				        })        
+				    }
+				  })
+			},
+			changeModel(){
+				uni.showLoading({
+					mask:true
+				})
+				var that = this;
+				const userData =  uni.getStorageSync('user');
+				uni.request({
+					url: this.$BASE_URL+'/skindataest',
+					header:{Authorization: 'Bearer '+userData.access_token},
+					method:'POST',
+					data: this.form,
+					success: (res) => {
+					 
+					  const data = res.data;
+					  if (data.code == '401') {
+						uni.hideLoading();
+					    uni.showToast({
+					      icon: "none",
+					      title: data.msg
+					    });
+					  } else if (data.code == '200') {
+						for (let i = 0; i < data.data.length; i++) {
+						        data.data[i].sicknessurl = "data:image/jpeg;base64," + data.data[i].sicknessurl;
+								data.data[i].Wtreatment = that.formatText(data.data[i].Wtreatment);
+								data.data[i].Ctreatment = that.formatText(data.data[i].Ctreatment);
+							}
+						    // 将数据存储在that.test中
+						that.test = data.data;
+						that.form.date = that.formatDate(data.data[0].date);
+						// console.log(typeof that.test[0].Wtreatment);
+						uni.hideLoading();
+					  }else{
+						  uni.hideLoading();
+						  uni.showToast({
+						    icon: "none",
+						    title: data.msg
+						  });
+					  }
+					},
+					fail: (err) => {
+						uni.hideLoading();
+					  // 请求失败时的处理逻辑
+					  if (err.statusCode === 404) {
+					    uni.showToast({
+					      icon: 'none',
+					      title: '请求失败，找不到资源'
+					    });
+					  } else if (err.statusCode === 500) {
+					    uni.showToast({
+					      icon: 'none',
+					      title: '服务器内部错误，请稍后重试'
+					    });
+					  } else {
+					    uni.showToast({
+					      icon: 'none',
+					      title: '请求失败，请稍后重试'
+					    });
+					  }
+					  
+					  
+					}
+				})
+				
+			},
 			// saveimage(){
 			// 	/* 获取节点信息的对象 */
 			// 	var that = this;
@@ -473,7 +572,16 @@ import { base64ToPath } from '../../js_sdk/mmmm-image-tools';
 		height:100%;
 		background-color:#ECEFF1;
 	}
-
+	>>>.uni-section .uni-section-header__content {
+		flex: unset !important;
+	}
+	>>>.uni-section .uni-section-header__slot-right{
+		flex: 1 !important;
+	}
+	/deep/.uni-card--border {
+		visibility: visible !important;  
+		overflow: unset !important;  
+	}
 	/deep/.uni-progress-inner-bar{
 		border-radius: 30rpx !important;
 		background:linear-gradient(to right,#857BE8,#52468C) !important ;

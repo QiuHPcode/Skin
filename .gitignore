@@ -1,0 +1,90 @@
+# ====================
+# Python
+# ====================
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+*.env
+*.env.*
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Unit test / coverage
+.pytest_cache/
+.coverage
+.tox/
+.nox/
+.cache/
+htmlcov/
+coverage.xml
+
+# mypy / pylint
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pylint.d/
+
+# ====================
+# IDEs & Editors
+# ====================
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# HBuilderX
+.settings/
+.project
+.uxconfig.json
+*.bak
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# ====================
+# Others
+# ====================
+
+# Node-related (if using UniApp or HBuilderX frontend)
+node_modules/
+npm-debug.log*
+yarn-error.log
+pnpm-lock.yaml
+package-lock.json
+dist/
+build/
+
+# Local files
+*.local
+*.sqlite
+*.db
+
+# Backup files
+*.bak
+*.tmp
+*.swp
+*~
+
+# Ignore custom secrets/configs
+config.json
+secrets.json
+*.key
+*.crt

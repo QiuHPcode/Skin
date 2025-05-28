@@ -1,15 +1,15 @@
-import json
-
 import cv2
+import numpy as np
 import torch
 from PIL import Image
 from torchvision import transforms
 from ultralytics.utils import ops
 
-from model import ResNet34
-import torch.nn.functional as F
-
-from utils.general import xywh2xyxy
+from core.datasets import Compose
+from models.build import BuildNet
+from models.model_resNet import ResNet34, ResNet50
+from utils.checkpoint import load_checkpoint
+from models.efficientnetv2.efficientnetv2_b0 import model_cfg, val_pipeline
 
 '''
 文本：{性别，年龄，病变部位}
@@ -187,15 +187,44 @@ def get_info(gender,age,area):#传入性别gender，年龄age，部位area,生�
     # print("病人信息为{}".format(patient_info))
     return patient_info
 
-# 加载模型
-def load_model(model_weights_path,device):
+# 加载模型resnet34
+def load_model34(model_weights_path,device):
     # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = ResNet34(72).to(device)
     # 权重文件放入模型中
     model.load_state_dict(torch.load(model_weights_path, map_location=device))
     model.eval()
-    print("模型加载成功")
+    print("R34模型加载成功")
     return model
+
+
+# 加载模型resnet34
+def load_model50(model_weights_path,device):
+    # device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = ResNet50(72).to(device)
+    # 权重文件放入模型中
+    model.load_state_dict(torch.load(model_weights_path, map_location=device))
+    model.eval()
+    print("R50模型加载成功")
+    return model
+
+
+
+# 初始化模型Efficientnetv2
+def load_modelEv2(model_cfg: dict, checkpoint_path, device='cuda'):
+    # 构建模型
+    model = BuildNet(model_cfg)
+
+    load_checkpoint(model, checkpoint_path, map_location=device, strict=False)
+    model.eval()
+    model.to(device)
+    print("E_v0模型初始化成功")
+    return model
+
+
+
+
+
 
 # 图像预处理函数
 def preprocess_image(image):
@@ -218,6 +247,32 @@ def predict(model, image):
 
     # print("预测完成")
     return output
+
+
+# Ev0预测函数
+def Ev2Predict(model, image, val_pipeline):
+    if isinstance(image, str):
+        if val_pipeline[0]['type'] != 'LoadImageFromFile':
+            val_pipeline.insert(0, dict(type='LoadImageFromFile'))
+        data = dict(img_info=dict(filename=image), img_prefix=None)
+    else:
+        if val_pipeline[0]['type'] == 'LoadImageFromFile':
+            val_pipeline.pop(0)
+        if isinstance(image, Image.Image):  # ✅ 处理 PIL.Image
+            image = np.array(image)
+        data = dict(img=image, filename=None)
+
+    pipeline = Compose(val_pipeline)
+    image = pipeline(data)['img'].unsqueeze(0)
+    device = next(model.parameters()).device  # model device
+
+    # forward the model
+    with torch.no_grad():
+        scores = model(image.to(device), return_loss=False)
+        # print(scores)
+    return scores
+
+
 
 # 加权函数
 def jia_quan(patient_info, output, diseases_info):
@@ -283,9 +338,9 @@ def get_top(new_out):
 
 
 #汇总
-def all_work(image,gender,age,area,model):#模型权重文件 model_weights_path,图片地址 image_path,性别 gender,年龄 age,部位 area
-    # 进行预测
-    output = predict(model, image)
+def all_work(output, gender, age, area):#模型权重文件 model_weights_path,图片地址 image_path,性别 gender,年龄 age,部位 area
+
+    # print('output',output)
     # 生成病人文本信息
     patient_info = get_info(gender, age, area)
     # 根据用户信息，进一步对得分加权
@@ -296,11 +351,17 @@ def all_work(image,gender,age,area,model):#模型权重文件 model_weights_path
     top_out=get_top(new_out)
     # print("前三",top_out)
     return top_out
+
+
+
 def main():
-    model_weights_path = r'model-294 of 500-0.4751133918762207-0.6676676676676677.pth'
+    # model_weights_path = r'resNet34.pth'
+    model_weights_path = r'model/allCategory/E_b0.pth'
+
     device1 = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model = load_model(model_weights_path,device1)
-    image_path = r"img.jpg"  # 图像路径
+    # model = load_model34(model_weights_path,device1)
+    model = load_modelEv2(model_cfg,model_weights_path,device1)
+    image_path = r"1.jpg"  # 图像路径
     image = cv2.imread(image_path)
 
     gn1 = torch.tensor(image.shape)[[1, 0, 1, 0]]  # 注意这里的索引顺序是[1, 0, 1, 0]
@@ -317,8 +378,11 @@ def main():
 
     area = [0] * 40
     gender,age, area[22] = 1,16,1
+    # 进行预测
+    # output = predict(model, image1)
+    output = Ev2Predict(model,image1,val_pipeline)
 
-    top_out=all_work(image1,"男",16,area,model)
+    top_out=all_work(output,"男",16,area)
 
     print('all_work返回值：{}'.format(top_out))
 

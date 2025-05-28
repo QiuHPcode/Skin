@@ -566,7 +566,7 @@
 				}).exec();
 			},
 			draw(index){
-				var context = uni.createCanvasContext('myCanvas'+index, this);
+				  var context = uni.createCanvasContext('myCanvas'+index, this);
 				  var color = this.iconnum==index ? '#51458B' : '#fff';  // 根据条件选择颜色
 				  context.setStrokeStyle(color);  // 使用选择的颜色 
 				  context.setLineWidth(2);  // 设置矩形框的线宽
@@ -576,7 +576,7 @@
 				  var height = this.box[index][3] * this.image.displayHeight;
 				  var centerX = this.box[index][0] * this.image.displayWidth;  // 矩形框中心点的x坐标
 				  var centerY = this.box[index][1] * this.image.displayHeight;// 矩形框中心点的y坐标
-				  // this.x = centerX - width / 2;	  
+				  // this.x = centerX - width / 2;	   
 				  // this.y =  centerY - height / 2;
 				  // this.width = width;
 				  // this.height = height;
