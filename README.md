@@ -1,6 +1,6 @@
 # 肤测汇——基于AI图像视觉的中西医皮肤疾病诊断与识别
 
-##2025.5.28 更新 分类模型多个选择 ResNet34 和EfficientV2-b0（本来还有ResNet50和V2-b1 b2 s这些 但模型太大 不想上传了）
+## 2025.5.28 更新 分类模型多个选择 ResNet34 和EfficientV2-b0（本来还有ResNet50和V2-b1 b2 s这些 但模型太大 不想上传了）
 
 
 ## 基于Uni-app(Vite的Vue3)+Python的flask+MySql+PyTorch
