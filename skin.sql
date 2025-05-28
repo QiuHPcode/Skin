@@ -49,9 +49,7 @@ CREATE TABLE `model`  (
 INSERT INTO `model` VALUES (1, 'R34模型', 'R', 0);
 INSERT INTO `model` VALUES (2, 'R50模型', 'R', 0);
 INSERT INTO `model` VALUES (3, 'Ev2b0模型', 'E', 0);
-INSERT INTO `model` VALUES (4, 'Ev2b1模型', 'E', 0);
-INSERT INTO `model` VALUES (5, 'Ev2b2模型', 'E', 0);
-INSERT INTO `model` VALUES (6, 'Ev2s模型', 'E', 0);
+
 
 -- ----------------------------
 -- Table structure for result
