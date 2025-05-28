@@ -1,0 +1,46 @@
+		<view v-if="form.sex == '男'" >
+			<view v-if="opposite" style="height: 65vh; width: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center; overflow: hidden; ">
+				<image class="image" src="../../static/humam/man1.jpg" mode="aspectFit" style="height: 100%; width: 100%;" @load="imageLoad"></image>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(105, 178, 255, 0.3)' , width: '15%' , height: '12%' , top: canvastop + '%'}" @click="canvas(0)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(255, 170, 127, 0.3)' , width: '18%' , height: '17%' , top: canvastop+12 + '%'}" @click="canvas(1)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 255, 127, 0.3)' , width: '10%' , height: '4%' , top: canvastop+29 + '%',left:'45%'}" @click="canvas(2)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '5%' , height: '4%' , top: canvastop+29 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '32%' , top: canvastop+33 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '5%' , height: '4%' , top: canvastop+29 + '%',left:'55%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '32%' , top: canvastop+33 + '%',left:'51%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '22%' , height: '26%' , top: canvastop+12 + '%',left:'19%'}" @click="canvas(4)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '22%' , height: '26%' , top: canvastop+12 + '%',left:'59%'}" @click="canvas(4)"></canvas>
+			</view>
+			<view v-else-if="!opposite" style="height: 65vh; width: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center;">
+				<image class="image" src="../../static/humam/man2.jpg" mode="aspectFit" style="height: 100%; width: 100%; " @load="imageLoad"></image>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(105, 178, 255, 0.3)' , width: '15%' , height: '12%' , top: canvastop + '%'}" @click="canvas(0)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(255, 170, 127, 0.3)' , width: '18%' , height: '23%' , top: canvastop+12 + '%'}" @click="canvas(1)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '30%' , top: canvastop+35 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '30%' , top: canvastop+35 + '%',left:'51%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '22%' , height: '26%' , top: canvastop+12 + '%',left:'19%'}" @click="canvas(4)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '22%' , height: '26%' , top: canvastop+12 + '%',left:'59%'}" @click="canvas(4)"></canvas>
+			</view>
+		</view>
+		<view v-if="form.sex == '女'">
+			<view v-if="opposite" style="height: 65vh; width: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center; overflow: hidden; ">
+				<image class="image" src="../../static/humam/woman1.jpg" mode="aspectFit" style="height: 100%; width: 100%;" @load="imageLoad"></image>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(105, 178, 255, 0.3)' , width: '15%' , height: '12%' , top: canvastop + '%'}" @click="canvas(0)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(255, 170, 127, 0.3)' , width: '17%' , height: '17%' , top: canvastop+12 + '%'}" @click="canvas(1)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 255, 127, 0.3)' , width: '10%' , height: '4%' , top: canvastop+29 + '%',left:'45%'}" @click="canvas(2)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '5%' , height: '4%' , top: canvastop+29 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '32%' , top: canvastop+33 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '5%' , height: '4%' , top: canvastop+29 + '%',left:'55%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '32%' , top: canvastop+33 + '%',left:'51%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '20%' , height: '25%' , top: canvastop+12 + '%',left:'21%'}" @click="canvas(4)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '20%' , height: '25%' , top: canvastop+12 + '%',left:'59%'}" @click="canvas(4)"></canvas>
+			</view>
+			<view v-else-if="!opposite" style="height: 65vh; width: 100%; background-color: #fff; display: flex; justify-content: center; align-items: center;">
+				<image class="image" src="../../static/humam/woman2.jpg" mode="aspectFit" style="height: 100%; width: 100%;" @load="imageLoad"></image>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(105, 178, 255, 0.3)' , width: '15%' , height: '12%' , top: canvastop + '%'}" @click="canvas(0)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(255, 170, 127, 0.3)' , width: '18%' , height: '23%' , top: canvastop+12 + '%'}" @click="canvas(1)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '30%' , top: canvastop+35 + '%',left:'40%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(85, 255, 255, 0.3)' , width: '10%' , height: '30%' , top: canvastop+35 + '%',left:'51%'}" @click="canvas(3)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '20%' , height: '25%' , top: canvastop+12 + '%',left:'21%'}" @click="canvas(4)"></canvas>
+				<canvas :style="{position: 'absolute' , 'background-color': 'rgba(170, 85, 127, 0.3)' , width: '20%' , height: '25%' , top: canvastop+12 + '%',left:'59%'}" @click="canvas(4)"></canvas>
+			</view>
+		</view>
