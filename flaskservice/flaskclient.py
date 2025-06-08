@@ -65,19 +65,21 @@ models2 = DetectMultiBackend(weights2, device=device, fp16=half)
 
 # resnet34模型加载
 model_weights34_path = r'model/allCategory/resNet34.pth'
-model_weights50_path = r'model/allCategory/resNet50.pth'
+# model_weights50_path = r'model/allCategory/resNet50.pth'
 model_weightsEv2_b0_path = r'model/allCategory/E_b0.pth'
-model_weightsEv2_b1_path = r'model/allCategory/E_b1.pth'
-model_weightsEv2_b2_path = r'model/allCategory/E_b2.pth'
-model_weightsEv2_s_path = r'model/allCategory/E_s.pth'
+# model_weightsEv2_b1_path = r'model/allCategory/E_b1.pth'
+# model_weightsEv2_b2_path = r'model/allCategory/E_b2.pth'
+# model_weightsEv2_s_path = r'model/allCategory/E_s.pth'
 device1 = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model34 = load_model34(model_weights34_path,device1)
-model50 = load_model50(model_weights50_path,device1)
+# model50 = load_model50(model_weights50_path,device1)
 model_Ev2_b0 = load_modelEv2(model_cfg, model_weightsEv2_b0_path, device1)
-model_Ev2_b1 = load_modelEv2(model_cfg1, model_weightsEv2_b1_path, device1)
-model_Ev2_b2 = load_modelEv2(model_cfg2, model_weightsEv2_b2_path, device1)
-model_Ev2_s = load_modelEv2(model_cfg_s, model_weightsEv2_s_path, device1)
-allModels = [model34, model50, model_Ev2_b0, model_Ev2_b1, model_Ev2_b2, model_Ev2_s]
+# model_Ev2_b1 = load_modelEv2(model_cfg1, model_weightsEv2_b1_path, device1)
+# model_Ev2_b2 = load_modelEv2(model_cfg2, model_weightsEv2_b2_path, device1)
+# model_Ev2_s = load_modelEv2(model_cfg_s, model_weightsEv2_s_path, device1)
+# allModels = [model34, model50, model_Ev2_b0, model_Ev2_b1, model_Ev2_b2, model_Ev2_s]
+allModels = [model34, '', model_Ev2_b0]
+
 
 # with app.app_context():
 #     users = User_account.query.all()
